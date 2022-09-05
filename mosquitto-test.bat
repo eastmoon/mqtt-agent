@@ -22,5 +22,5 @@ echo CACHE_VOLUME=%cd%\cache >> %cd%\docker\.env
 
 @rem execute converter
 docker-compose -f %cd%\docker\docker-compose-mosquitto.yml up -d
-docker exec -ti -w "/usr/share/nginx/html/cgi-bin" mqtt-agent-nginx-service bash
+docker exec -ti -w "/app" mqtt-agent-tester-service sh -c "source mosquitto-run.sh"
 docker-compose -f %cd%\docker\docker-compose-mosquitto.yml down

@@ -45,12 +45,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
-					"protocol": "http",
+					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
 					"host": [
-						"localhost"
+						"{{hostUrl}}"
 					],
-					"port": "8080",
 					"path": [
 						"cgi-bin",
 						"rpc"
@@ -101,12 +99,10 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
-					"protocol": "http",
+					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
 					"host": [
-						"localhost"
+						"{{hostUrl}}"
 					],
-					"port": "8080",
 					"path": [
 						"cgi-bin",
 						"rpc"
@@ -126,6 +122,12 @@
 							"key": "t",
 							"value": "test/testdevice",
 							"description": "對話路由"
+						},
+						{
+							"key": "w",
+							"value": "20",
+							"description": "偵聽等候時間，預設為 20 秒",
+							"disabled": true
 						}
 					]
 				}
@@ -177,12 +179,10 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
-					"protocol": "http",
+					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
 					"host": [
-						"localhost"
+						"{{hostUrl}}"
 					],
-					"port": "8080",
 					"path": [
 						"cgi-bin",
 						"rpc"
@@ -244,12 +244,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice&subcmd=0",
-					"protocol": "http",
+					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice&subcmd=0",
 					"host": [
-						"localhost"
+						"{{hostUrl}}"
 					],
-					"port": "8080",
 					"path": [
 						"cgi-bin",
 						"rpc"

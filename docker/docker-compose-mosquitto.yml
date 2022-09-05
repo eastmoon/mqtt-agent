@@ -4,9 +4,16 @@
 version: "2.0"
 services:
 
+  tester:
+    image: tester-service
+    container_name: mqtt-agent-tester-service
+    volumes:
+      - ${SOURCE_CODE_VOLUME}\postman:/app
+      - ${CACHE_VOLUME}:/cache
+
   nginx:
     image: mosquitto-agent
-    container_name: mqtt-test-nginx-service
+    container_name: mqtt-agent-nginx-service
     volumes:
       - ${SOURCE_CODE_VOLUME}\perl:/usr/share/nginx/html/cgi-bin
       - ${SOURCE_CODE_VOLUME}\html:/usr/share/nginx/html
@@ -15,7 +22,7 @@ services:
 
   mosquitto:
     image: eclipse-mosquitto:1.4.12
-    container_name: mqtt-test-mosquitto-service
+    container_name: mqtt-agent-mosquitto-service
     ports:
       - 1883:1883
       - 9001:9001
