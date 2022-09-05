@@ -32,10 +32,16 @@
 + 啟動 Mosquitto 開發環境
 
 ```
-mosquitto-dev.bat
+mosquitto.bat dev
 ```
+> 此指令用於 Windows 作業系統，並透過 Docker Compose 啟動一個 mosquitto 服務與 nginx + mosquitto-client 服務。
 
-此指令用於 Windows 作業系統，並透過 Docker Compose 啟動一個 mosquitto 服務與 nginx + mosquitto-client 服務。
++ 測試 Mosquitto 腳本
+
+```
+mosquitto.bat test
+```
+> 此指令用於 Windows 作業系統，並透過 Docker Compose 啟動一個 mosquitto 服務與 nginx + mosquitto-client 服務。
 
 ## 文獻
 
@@ -44,10 +50,12 @@ mosquitto-dev.bat
 + End-to-End 測試
     - [What is end-to-end testing?](https://circleci.com/blog/what-is-end-to-end-testing/)
     - [一次搞懂單元測試、整合測試、端對端測試之間的差異](https://blog.miniasp.com/post/2019/02/18/Unit-testing-Integration-testing-e2e-testing)
-+ [FIWARE - IoT Over MQTT](https://fiware-tutorials.readthedocs.io/en/stable/iot-over-mqtt/)
-+ [Shelly - MQTT API](https://shelly-api-docs.shelly.cloud/gen2/ComponentsAndServices/Mqtt/)
-+ [MQTT in curl](https://curl.se/docs/mqtt.html)
 + mosquitto
-    + [mosquitto - Docker hub](https://hub.docker.com/_/eclipse-mosquitto)
-    + [mosquitto_pub](https://mosquitto.org/man/mosquitto_pub-1.html)
-    + [mosquitto_sub](https://mosquitto.org/man/mosquitto_sub-1.html)
+    - 文獻
+        + [mosquitto - Docker hub](https://hub.docker.com/_/eclipse-mosquitto)
+        + [mosquitto_pub](https://mosquitto.org/man/mosquitto_pub-1.html)
+        + [mosquitto_sub](https://mosquitto.org/man/mosquitto_sub-1.html)
+    + 設計參考
+        + [FIWARE - IoT Over MQTT](https://fiware-tutorials.readthedocs.io/en/stable/iot-over-mqtt/)
+        + [Shelly - MQTT API](https://shelly-api-docs.shelly.cloud/gen2/ComponentsAndServices/Mqtt/)
+        + [MQTT in curl](https://curl.se/docs/mqtt.html)
