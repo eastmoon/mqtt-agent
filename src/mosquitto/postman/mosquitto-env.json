@@ -3,12 +3,12 @@
 	"name": "mosquitto-env",
 	"values": [
 		{
-			"key": "mosquittoUrl",
+			"key": "mqUrl",
 			"value": "mosquitto",
 			"enabled": true
 		},
 		{
-			"key": "mosquittoPort",
+			"key": "mqPort",
 			"value": "1883",
 			"enabled": true
 		},
@@ -19,6 +19,6 @@
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2022-09-05T10:02:12.828Z",
+	"_postman_exported_at": "2022-09-05T10:49:26.045Z",
 	"_postman_exported_using": "Postman/8.10.0"
 }

@@ -45,7 +45,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
+					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice",
 					"host": [
 						"{{hostUrl}}"
 					],
@@ -56,12 +56,12 @@
 					"query": [
 						{
 							"key": "h",
-							"value": "{{mosquittoUrl}}",
+							"value": "{{mqUrl}}",
 							"description": "目標 Mosquitto 伺服器網址"
 						},
 						{
 							"key": "p",
-							"value": "{{mosquittoPort}}",
+							"value": "{{mqPort}}",
 							"description": "目標 Mosquitto 伺服器連接埠"
 						},
 						{
@@ -99,7 +99,7 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
+					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice",
 					"host": [
 						"{{hostUrl}}"
 					],
@@ -110,12 +110,12 @@
 					"query": [
 						{
 							"key": "h",
-							"value": "{{mosquittoUrl}}",
+							"value": "{{mqUrl}}",
 							"description": "目標 Mosquitto 伺服器網址"
 						},
 						{
 							"key": "p",
-							"value": "{{mosquittoPort}}",
+							"value": "{{mqPort}}",
 							"description": "目標 Mosquitto 伺服器連接埠"
 						},
 						{
@@ -179,7 +179,7 @@
 					}
 				},
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
+					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice",
 					"host": [
 						"{{hostUrl}}"
 					],
@@ -190,12 +190,12 @@
 					"query": [
 						{
 							"key": "h",
-							"value": "{{mosquittoUrl}}",
+							"value": "{{mqUrl}}",
 							"description": "目標 Mosquitto 伺服器網址"
 						},
 						{
 							"key": "p",
-							"value": "{{mosquittoPort}}",
+							"value": "{{mqPort}}",
 							"description": "目標 Mosquitto 伺服器連接埠"
 						},
 						{
@@ -244,7 +244,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice&subcmd=0",
+					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice&subcmd=0",
 					"host": [
 						"{{hostUrl}}"
 					],
@@ -255,12 +255,12 @@
 					"query": [
 						{
 							"key": "h",
-							"value": "{{mosquittoUrl}}",
+							"value": "{{mqUrl}}",
 							"description": "目標 Mosquitto 伺服器網址"
 						},
 						{
 							"key": "p",
-							"value": "{{mosquittoPort}}",
+							"value": "{{mqPort}}",
 							"description": "目標 Mosquitto 伺服器連接埠"
 						},
 						{
