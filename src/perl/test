@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+$MQTT_SERVER = "192.168.43.35";
+$MQTT_PORT = "1883";
+$MQTT_TOPIC = "test/testdevice";
+$CONTENT = "{'id':1, 'src':'mynewtopic', 'method':'Schedule.List'}";
+#$result = `mosquitto_pub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -m \"$CONTENT\"`;
+$result = `mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C 1 -W 10`;
+if ($? == -1) {
+    print "failed to execute: $!\n";
+}
+elsif ($? & 127) {
+    printf "child died with signal %d, %s coredump\n",
+        ($? & 127),  ($? & 128) ? 'with' : 'without';
+}
+else {
+    $stdval = $? >> 8;
+    printf "child exited with value %d\n", $stdval;
+    if ($stdval == 1) {
+        print "Error: Connection refused\n";
+    } elsif ($stdval == 27) {
+        print "Error: Connection timed out\n";
+    } elsif ($stdval == 127) {
+        print "Error: Command not found\n";
+    } else {
+        print "Success\n";
+        print "$result\n";
+    }
+}

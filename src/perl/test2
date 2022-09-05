@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+$MQTT_SERVER = "192.168.43.35";
+$MQTT_PORT = "1883";
+$MQTT_TOPIC = "test/testdevice";
+$filename = "/root/mosquitto-test-testdevice.log";
+#$result = `mosquitto_sub -h 192.168.43.35 -p 1883 -t \"#\" -v -C 1 -W 100 > mqtt.log &`;
+#system("mosquitto_sub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC, "-v", "-C", 1, "-W", 20, ">", $filename, "&");
+#exec "mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C 1 -W 20 > $filename &"
+
+open(FH, '<', $filename) or die $!;
+$result = <FH>;
+print $result;
+close $FH;

@@ -1,0 +1,26 @@
+# Docker-Compose document
+# Ref : https://docs.docker.com/compose/compose-file/
+
+version: "2.0"
+services:
+
+  nginx:
+    image: mosquitto-agent
+    container_name: mqtt-test-nginx-service
+    volumes:
+      - ${SOURCE_CODE_VOLUME}\perl:/usr/share/nginx/html/cgi-bin
+      - ${SOURCE_CODE_VOLUME}\html:/usr/share/nginx/html
+    ports:
+      - 8080:80
+
+  mosquitto:
+    image: eclipse-mosquitto:1.4.12
+    container_name: mqtt-test-mosquitto-service
+    ports:
+      - 1883:1883
+      - 9001:9001
+
+networks:
+  default:
+    driver: bridge
+    name: mqtt-test-network

@@ -1,0 +1,304 @@
+{
+	"info": {
+		"_postman_id": "2e8f7d51-d3b1-4a74-9a65-db5bc702805d",
+		"name": "mosquitto-agent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Unknown DELETE Command",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"POST RPC method is success\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})\r",
+							"pm.test(\"Response structure is right\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.a(\"object\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
+							"})\r",
+							"pm.test(\"Response is success\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.a(\"object\");\r",
+							"    pm.expect(responseJson.status).to.eql(\"Error: Unknown API command\");\r",
+							"    pm.expect(responseJson.message).include(\"DELETE\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cgi-bin",
+						"rpc"
+					],
+					"query": [
+						{
+							"key": "h",
+							"value": "{{mosquittoUrl}}",
+							"description": "目標 Mosquitto 伺服器網址"
+						},
+						{
+							"key": "p",
+							"value": "{{mosquittoPort}}",
+							"description": "目標 Mosquitto 伺服器連接埠"
+						},
+						{
+							"key": "t",
+							"value": "test/testdevice",
+							"description": "對話路由"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register listener",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"POST RPC method is success\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})\r",
+							"pm.test(\"Response structure is right\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.a(\"object\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cgi-bin",
+						"rpc"
+					],
+					"query": [
+						{
+							"key": "h",
+							"value": "{{mosquittoUrl}}",
+							"description": "目標 Mosquitto 伺服器網址"
+						},
+						{
+							"key": "p",
+							"value": "{{mosquittoPort}}",
+							"description": "目標 Mosquitto 伺服器連接埠"
+						},
+						{
+							"key": "t",
+							"value": "test/testdevice",
+							"description": "對話路由"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Published",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"POST RPC method is success\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})\r",
+							"pm.test(\"Response structure is right\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.a(\"object\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"request\");\r",
+							"    pm.expect(responseJson.request).haveOwnProperty(\"METHOD\");\r",
+							"    pm.expect(responseJson.request.METHOD).to.eql(\"POST\");\r",
+							"})\r",
+							"pm.test(\"Response is success\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.a(\"object\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
+							"    pm.expect(responseJson.status).to.eql(\"success\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
+							"    pm.expect(responseJson.message).to.eql(\"\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{'id':1, 'src':'mynewtopic', 'method':'Schedule.List'}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cgi-bin",
+						"rpc"
+					],
+					"query": [
+						{
+							"key": "h",
+							"value": "{{mosquittoUrl}}",
+							"description": "目標 Mosquitto 伺服器網址"
+						},
+						{
+							"key": "p",
+							"value": "{{mosquittoPort}}",
+							"description": "目標 Mosquitto 伺服器連接埠"
+						},
+						{
+							"key": "t",
+							"value": "test/testdevice",
+							"description": "對話路由"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subscribe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET RPC method is success\", () => {\r",
+							"    pm.response.to.have.status(200)\r",
+							"})\r",
+							"pm.test(\"Response structure is right\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.a(\"object\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"request\");\r",
+							"    pm.expect(responseJson.request).haveOwnProperty(\"METHOD\");\r",
+							"    pm.expect(responseJson.request.METHOD).to.eql(\"GET\");\r",
+							"})\r",
+							"pm.test(\"Response is success\", () => {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson).to.be.a(\"object\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
+							"    pm.expect(responseJson.status).to.eql(\"success\");\r",
+							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
+							"    pm.expect(responseJson.message).to.not.eql(\"\");\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/cgi-bin/rpc?h={{mosquittoUrl}}&p={{mosquittoPort}}&t=test/testdevice&subcmd=0",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cgi-bin",
+						"rpc"
+					],
+					"query": [
+						{
+							"key": "h",
+							"value": "{{mosquittoUrl}}",
+							"description": "目標 Mosquitto 伺服器網址"
+						},
+						{
+							"key": "p",
+							"value": "{{mosquittoPort}}",
+							"description": "目標 Mosquitto 伺服器連接埠"
+						},
+						{
+							"key": "t",
+							"value": "test/testdevice",
+							"description": "對話路由"
+						},
+						{
+							"key": "subcmd",
+							"value": "0",
+							"description": "若為 \"1\" 使用 mosquitto_sub 來偵聽；若為 \"0\"，取得本地偵聽 log 內容；預設為 \"1\""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

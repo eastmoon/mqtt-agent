@@ -1,0 +1,152 @@
+#!/usr/bin/env perl
+
+# Import library
+use JSON;
+
+# Declare variable
+$REQUEST_METHOD ="";
+$REQUEST_URI ="";
+$CONTENT_TYPE = "";
+$CONTENT_LENGTH = "";
+$CONTENT = "";
+$MQTT_SERVER = "localhost";
+$MQTT_PORT = "1883";
+$MQTT_TOPIC = "/home/demo";
+$MQTT_TOPIC_MSG_COUNT = "1";
+$MQTT_TOPIC_WAIT_TIME = "20";
+$MQTT_GET_USE_SUB_CMD = "1";
+
+# Declare function
+sub parser_query_string {
+    $query = $ENV{'QUERY_STRING'};
+    @list = split( /\&/, $query);
+    foreach (@list) {
+      ($var, $val) = split(/=/);
+      if ( $var eq "h" ) {
+          $MQTT_SERVER = $val
+      } elsif ( $var eq "p" ) {
+          $MQTT_PORT = $val
+      } elsif ( $var eq "t") {
+          $MQTT_TOPIC = $val
+      } elsif ( $var eq "c") {
+          $MQTT_TOPIC_MSG_COUNT = $val
+      } elsif ( $var eq "w") {
+          $MQTT_TOPIC_WAIT_TIME = $val
+      } elsif ( $var eq "subcmd") {
+          $MQTT_GET_USE_SUB_CMD = $val
+      }
+    }
+}
+
+sub parser_request_information {
+    $REQUEST_METHOD = $ENV{'REQUEST_METHOD'};
+    $REQUEST_URI = $ENV{'REQUEST_URI'};
+    $CONTENT_TYPE = $ENV{'CONTENT_TYPE'};
+    $CONTENT_LENGTH = $ENV{'CONTENT_LENGTH'};
+    read (STDIN, $CONTENT, $ENV{'CONTENT_LENGTH'});
+}
+
+sub response_unknown_command {
+    print "Content-type: application/json";
+    print "Access-control-allow-origin: *";
+    print "\n\n";
+    %obj=("status"=>"Error: Unknown API command", "message"=>"$REQUEST_METHOD $REQUEST_URI did not match a known command");
+    $json_text_obj = encode_json \%obj;
+    print "$json_text_obj\n";
+}
+
+sub response_json {
+    my($stat, $result) = @_;
+    %req=(
+        "METHOD"=>$REQUEST_METHOD,
+        "CONTENT_TYPE"=>$CONTENT_TYPE,
+        "CONTENT_LENGTH"=>$CONTENT_LENGTH,
+        "MQTT_SERVER"=>$MQTT_SERVER,
+        "MQTT_PORT"=>$MQTT_PORT,
+        "MQTT_TOPIC"=>$MQTT_TOPIC,
+        "MQTT_MESSAGE"=>$CONTENT
+    );
+    %obj=(
+        "status"=>$stat,
+        "message"=>$result,
+        "request"=>\%req
+    );
+    print "Content-type: application/json";
+    print "Access-control-allow-origin: *";
+    print "\n\n";
+    $json_text_obj = encode_json \%obj;
+    print "$json_text_obj\n";
+}
+
+sub replace {
+    my ($from,$to,$string) = @_;
+    $string =~s/$from/$to/ig;
+    return $string;
+}
+
+sub exec_handle {
+    my ($code, $result) = @_;
+    if ($code == -1) {
+        $msg = sprintf "failed to execute: $!";
+        &response_json("error", $msg);
+    }
+    elsif ($code & 127) {
+        $msg = sprintf "child died with signal %d, %s coredump\n", ($? & 127),  ($? & 128) ? 'with' : 'without';
+        &response_json("error", $msg);
+    }
+    else {
+        $stdval = $code >> 8;
+        if ($stdval == 1) {
+            &response_json("error", "Error: Connection refused");
+        } elsif ($stdval == 27) {
+            &response_json("error", "Error: Connection timed out");
+        } elsif ($stdval == 127) {
+            &response_json("error", "Error: Command not found");
+        } else {
+            chomp $result;
+            &response_json("success", $result);
+        }
+    }
+}
+
+# Execute Script
+&parser_request_information();
+&parser_query_string();
+$cfilename = sprintf "/root/mosquitto-sub-request-%s.cmd", replace("/","-",$MQTT_TOPIC);
+$lfilename = sprintf "/root/mosquitto-%s.log", replace("/","-",$MQTT_TOPIC);
+if ( $REQUEST_METHOD eq "GET" ) {
+    #system("mosquitto_sub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC);
+    if ( $MQTT_GET_USE_SUB_CMD eq "1" ) {
+        $result = `mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C $MQTT_TOPIC_MSG_COUNT -W $MQTT_TOPIC_WAIT_TIME`;
+        &exec_handle($?, $result);
+    } else {
+        $child_pid = open(FH, '<', $lfilename) or &response_json("error", $!);
+        if ($child_pid) {
+            $result = <FH>;
+            close(FH);
+            if ( $result eq "" ) {
+                $msg = sprintf "Error: %s is empty.", $lfilename;
+                &response_json("error", $msg);
+            } else {
+                unlink $lfilename;
+                &response_json("success", $result);
+            }
+        }
+    }
+} elsif ( $REQUEST_METHOD eq "POST" ) {
+    #system("mosquitto_pub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC, "-m", $CONTENT);
+    $result = `mosquitto_pub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -m \"$CONTENT\"`;
+    &exec_handle($?, $result);
+} elsif ( $REQUEST_METHOD eq "PUT" ) {
+    #system("mosquitto_pub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC, "-m", $CONTENT);
+    $msg = sprintf "register topic %s listener with %d msg count and %d(s), log in %s", $MQTT_TOPIC, $MQTT_TOPIC_MSG_COUNT, $MQTT_TOPIC_WAIT_TIME, $lfilename;
+    #$result = `mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C 1 -W 20 > $filename &`;
+    #exec "mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C 1 -W 20 > $filename &";
+    #system("mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C 1 -W 20 > $filename &");
+    open(FH, '>', $cfilename) or die $!;
+    print FH "eval mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C $MQTT_TOPIC_MSG_COUNT -W $MQTT_TOPIC_WAIT_TIME > $lfilename &";
+    close(FH);
+    exec_handle($?, $msg);
+} else {
+    &response_unknown_command();
+}
