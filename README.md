@@ -17,10 +17,12 @@
     - 第二方案是使用註冊啟動偵聽，並於時間內發送取得，若中間有發送則會取回資訊，反之則無法取得內容
 + 可藉由流程腳本驗收流程正確性
 
-代理服務應對以下兩個 MQTT 系統：
+代理服務應對以下兩個 Message Queue 系統：
 
 + [Mosquitto](https://mosquitto.org/)
 + [RabbitMQ](https://www.rabbitmq.com/)
+    - RabbitMQ 管理服務提供 API 介面，可基於 AMQP 協定建構訊息柱列服務
+    - RabbitMQ 安裝 MQTT Plugin 可開啟 1883 服務，並與 Mosquitto 共用 Client
 
 代理服務使用系統：
 
@@ -29,19 +31,33 @@
 
 ## 指令
 
+指令用於 Windows 作業系統，並透過 Docker Compose 啟動相關服務。
+
 + 啟動 Mosquitto 開發環境
 
 ```
 mosquitto.bat dev
 ```
-> 此指令用於 Windows 作業系統，並透過 Docker Compose 啟動一個 mosquitto 服務與 nginx + mosquitto-client 服務。
+>
 
 + 測試 Mosquitto 腳本
 
 ```
 mosquitto.bat test
 ```
-> 此指令用於 Windows 作業系統，並透過 Docker Compose 啟動一個 mosquitto 服務與 nginx + mosquitto-client 服務。
+
++ 啟動 RabbitMQ 開發環境
+
+```
+rabbitmq.bat dev
+```
+>
+
++ 測試 RabbitMQ 腳本
+
+```
+rabbitmq.bat test
+```
 
 ## 文獻
 
@@ -55,9 +71,16 @@ mosquitto.bat test
         + [mosquitto - Docker hub](https://hub.docker.com/_/eclipse-mosquitto)
         + [mosquitto_pub](https://mosquitto.org/man/mosquitto_pub-1.html)
         + [mosquitto_sub](https://mosquitto.org/man/mosquitto_sub-1.html)
-    + 設計參考
+    - 設計參考
         + [FIWARE - IoT Over MQTT](https://fiware-tutorials.readthedocs.io/en/stable/iot-over-mqtt/)
         + [Shelly - MQTT API](https://shelly-api-docs.shelly.cloud/gen2/ComponentsAndServices/Mqtt/)
         + [MQTT in curl](https://curl.se/docs/mqtt.html)
 + rabbitmq
-    + [rabbitmq - Docker hub](https://hub.docker.com/_/rabbitmq)
+    - 文獻
+        + [rabbitmq - Docker hub](https://hub.docker.com/_/rabbitmq)
+        + [RabbitMQ Management HTTP API](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)
+        + [AMQP 0-9-1 Model Explained](https://www.rabbitmq.com/tutorials/amqp-concepts.html)
+    - 設計參考
+        + [Message Queue 簡介(以 RabbitMQ 為例)](https://godleon.github.io/blog/ChatOps/message-queue-concepts/)
+        + [RabbitMQ 筆記](https://hackmd.io/@flyxiang/HJ5u7CAtB)
+        + [RabbitMQ (二) 概念](https://dotblogs.com.tw/daniel/2019/01/26/114949)
