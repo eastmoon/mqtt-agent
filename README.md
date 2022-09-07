@@ -80,6 +80,8 @@ rabbitmq.bat test
         + [rabbitmq - Docker hub](https://hub.docker.com/_/rabbitmq)
         + [RabbitMQ Management HTTP API](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)
         + [AMQP 0-9-1 Model Explained](https://www.rabbitmq.com/tutorials/amqp-concepts.html)
+        + [RabbitMQ - MQTT Plugin](https://www.rabbitmq.com/mqtt.html)
+            - [CloudAMQP - MQTT](https://www.cloudamqp.com/docs/mqtt.html)
     - 設計參考
         + [Message Queue 簡介(以 RabbitMQ 為例)](https://godleon.github.io/blog/ChatOps/message-queue-concepts/)
         + [RabbitMQ 筆記](https://hackmd.io/@flyxiang/HJ5u7CAtB)
