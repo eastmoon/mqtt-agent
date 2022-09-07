@@ -17,7 +17,7 @@ services:
     image: rabbitmq-agent
     container_name: mqtt-agent-nginx-service
     volumes:
-      - ${SOURCE_CODE_VOLUME}\cgi:/usr/share/nginx/html/cgi-bin
+      - ${SOURCE_CODE_VOLUME}\..\mosquitto\cgi:/usr/share/nginx/html/cgi-bin
       - ${SOURCE_CODE_VOLUME}\html:/usr/share/nginx/html
     ports:
       - 8080:80

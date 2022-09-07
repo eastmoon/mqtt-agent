@@ -145,7 +145,7 @@ goto end
 :pre-start (
     @rem build locale converter image
     docker build -t tester-service %cd%\docker\tester-service
-    docker build -t rabbitmq-agent %cd%\docker\rabbitmq-agent
+    docker build -t rabbitmq-agent %cd%\docker\mosquitto-agent
 
     @rem create cache
     if NOT EXIST %cd%\cache\rabbitmq (
@@ -191,11 +191,25 @@ goto end
 
 :: ------------------- Command "test" method -------------------
 
+:cli-test-wait-server-statup (
+    docker logs mqtt-agent-rabbitmq-service --tail 30 > tmp.log
+    docker run -ti --rm -v %cd%\tmp.log:/tmp.log bash -l -c "cat tmp.log | grep 'Server startup complete' | wc -l > tmp.log"
+    set /p IS_STATUP= < tmp.log
+    del tmp.log
+    if !IS_STATUP! == 0 (
+        call :cli-test-wait-server-statup
+    ) else (
+        echo RabbitMQ startup
+    )
+    goto end
+)
 :cli-test (
     call :pre-start
 
     @rem execute script
     docker-compose -f %cd%\docker\docker-compose-rabbitmq.yml up -d
+    echo Wait for RabbitMQ startup ...
+    call :cli-test-wait-server-statup
     docker exec -ti -w "/app" mqtt-agent-tester-service sh -c "source run.sh"
     docker-compose -f %cd%\docker\docker-compose-rabbitmq.yml down
 

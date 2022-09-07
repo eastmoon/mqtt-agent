@@ -12,6 +12,8 @@ $CONTENT = "";
 $MQTT_SERVER = "localhost";
 $MQTT_PORT = "1883";
 $MQTT_TOPIC = "/home/demo";
+$MQTT_USER = "";
+$MQTT_USER_PASSWORD = "";
 $MQTT_TOPIC_MSG_COUNT = "1";
 $MQTT_TOPIC_WAIT_TIME = "20";
 $MQTT_GET_USE_SUB_CMD = "1";
@@ -28,6 +30,10 @@ sub parser_query_string {
           $MQTT_PORT = $val
       } elsif ( $var eq "t") {
           $MQTT_TOPIC = $val
+      } elsif ( $var eq "U") {
+          $MQTT_USER = $val
+      } elsif ( $var eq "P") {
+          $MQTT_USER_PASSWORD = $val
       } elsif ( $var eq "c") {
           $MQTT_TOPIC_MSG_COUNT = $val
       } elsif ( $var eq "w") {
@@ -117,7 +123,7 @@ $lfilename = sprintf "/root/mosquitto-%s.log", replace("/","-",$MQTT_TOPIC);
 if ( $REQUEST_METHOD eq "GET" ) {
     #system("mosquitto_sub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC);
     if ( $MQTT_GET_USE_SUB_CMD eq "1" ) {
-        $result = `mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C $MQTT_TOPIC_MSG_COUNT -W $MQTT_TOPIC_WAIT_TIME`;
+        $result = `mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C $MQTT_TOPIC_MSG_COUNT -W $MQTT_TOPIC_WAIT_TIME -u $MQTT_USER -P $MQTT_USER_PASSWORD`;
         &exec_handle($?, $result);
     } else {
         $child_pid = open(FH, '<', $lfilename) or &response_json("error", $!);
@@ -135,7 +141,7 @@ if ( $REQUEST_METHOD eq "GET" ) {
     }
 } elsif ( $REQUEST_METHOD eq "POST" ) {
     #system("mosquitto_pub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC, "-m", $CONTENT);
-    $result = `mosquitto_pub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -m \"$CONTENT\"`;
+    $result = `mosquitto_pub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -m \"$CONTENT\" -u $MQTT_USER -P $MQTT_USER_PASSWORD`;
     &exec_handle($?, $result);
 } elsif ( $REQUEST_METHOD eq "PUT" ) {
     #system("mosquitto_pub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC, "-m", $CONTENT);
@@ -144,7 +150,7 @@ if ( $REQUEST_METHOD eq "GET" ) {
     #exec "mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C 1 -W 20 > $filename &";
     #system("mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C 1 -W 20 > $filename &");
     open(FH, '>', $cfilename) or die $!;
-    print FH "eval mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C $MQTT_TOPIC_MSG_COUNT -W $MQTT_TOPIC_WAIT_TIME > $lfilename &";
+    print FH "eval mosquitto_sub -h $MQTT_SERVER -p $MQTT_PORT -t \"$MQTT_TOPIC\" -v -C $MQTT_TOPIC_MSG_COUNT -W $MQTT_TOPIC_WAIT_TIME -u $MQTT_USER -P $MQTT_USER_PASSWORD > $lfilename &";
     close(FH);
     exec_handle($?, $msg);
 } else {
