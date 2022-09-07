@@ -1,0 +1,2847 @@
+{
+	"info": {
+		"_postman_id": "0306ad82-df23-4b20-a5cb-397245d31a9d",
+		"name": "rabbitmq-agent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "RabbitMQ API",
+			"item": [
+				{
+					"name": "system",
+					"item": [
+						{
+							"name": "overview",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.response.to.have.status(200)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "rootpwd",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "root",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{rabbitUrl}}/api/overview",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"overview"
+									]
+								},
+								"description": "取得系統總覽資訊\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "user list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.response.to.have.status(200)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{rabbitUrl}}/api/users",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"users"
+									]
+								},
+								"description": "取得所有用戶列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "node list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.response.to.have.status(200)\r",
+											"})\r",
+											"pm.test(\"Node structure\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.a('array');\r",
+											"    const node = responseJson[0];\r",
+											"    pm.expect(node).to.be.a('object');\r",
+											"    pm.expect(node).haveOwnProperty(\"name\");\r",
+											"    pm.collectionVariables.set(\"RMQ_NODE\", node.name);\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{rabbitUrl}}/api/nodes",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"nodes"
+									]
+								},
+								"description": "取得 RabbitMQ cluster 中所有 node 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "node by name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.response.to.have.status(200)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{rabbitUrl}}/api/nodes/:node-name?memory=true&binary=true",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"nodes",
+										":node-name"
+									],
+									"query": [
+										{
+											"key": "memory",
+											"value": "true"
+										},
+										{
+											"key": "binary",
+											"value": "true"
+										}
+									],
+									"variable": [
+										{
+											"key": "node-name",
+											"value": "{{RMQ_NODE}}"
+										}
+									]
+								},
+								"description": "依據 name 取得 RabbitMQ cluster 中的 node 資訊\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "connections all list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST RPC method is success\", () => {\r",
+											"    pm.response.to.have.status(200)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{rabbitUrl}}/api/connections",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"connections"
+									]
+								},
+								"description": "A list of all open connections. Use pagination parameters to filter connections.\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "channels all list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"POST RPC method is success\", () => {\r",
+											"    pm.response.to.have.status(200)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{rabbitUrl}}/api/channels",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"channels"
+									]
+								},
+								"description": "A list of all exchanges. Use pagination parameters to filter exchanges.\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "vhost",
+					"item": [
+						{
+							"name": "operations",
+							"item": [
+								{
+									"name": "vhost all list",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/vhosts",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"vhosts"
+											]
+										},
+										"description": "取得所有 vhost 列表 \n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "vhosts new",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(201)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/vhosts/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"vhosts",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "name",
+													"value": "demo"
+												}
+											]
+										},
+										"description": "新增一個 vhost，正常回應 201、重覆回應 204\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "vhosts information",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/vhosts/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"vhosts",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "name",
+													"value": "demo"
+												}
+											]
+										},
+										"description": "依據 name 取得 vhost 資訊\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "vhosts remove",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(204)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/vhosts/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"vhosts",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "name",
+													"value": "demo"
+												}
+											]
+										},
+										"description": "依據 name 刪除 vhost\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "vhosts information, check remove complete",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(404)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/vhosts/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"vhosts",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "name",
+													"value": "demo"
+												}
+											]
+										},
+										"description": "依據 name 取得 vhost 資訊\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "create new vhost",
+							"item": [
+								{
+									"name": "vhosts new",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.expect(pm.response).to.be.a('object');\r",
+													"    pm.expect(pm.response).haveOwnProperty(\"code\");\r",
+													"    pm.expect(pm.response.code).to.be.within(200, 204);\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/vhosts/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"vhosts",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "name",
+													"value": "{{RMQ_VHOST}}"
+												}
+											]
+										},
+										"description": "新增一個 vhost，正常回應 201、重覆回應 204\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "vhosts information",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/vhosts/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"vhosts",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "name",
+													"value": "{{RMQ_VHOST}}"
+												}
+											]
+										},
+										"description": "依據 name 取得 vhost 資訊\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.collectionVariables.set(\"RMQ_VHOST\", \"VH1\");"
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "exchange",
+					"item": [
+						{
+							"name": "operations",
+							"item": [
+								{
+									"name": "exchanges all list",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/exchanges",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"exchanges"
+											]
+										},
+										"description": "取得 exchange 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "exchanges list with vhost",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/exchanges/:vhost",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"exchanges",
+												":vhost"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												}
+											]
+										},
+										"description": "取得 vhost 中的 exchange 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "exchanges new",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(201)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"type\":\"direct\",\r\n    \"auto_delete\":false,\r\n    \"durable\":true,\r\n    \"internal\":false,\r\n    \"arguments\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rabbitUrl}}/api/exchanges/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"exchanges",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "demo"
+												}
+											]
+										},
+										"description": "新增 exchange 於 vhost 中\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "exchanges information",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/exchanges/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"exchanges",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "demo"
+												}
+											]
+										},
+										"description": "取得 exchange 資訊\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "exchanges remove",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(204)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/exchanges/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"exchanges",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "demo"
+												}
+											]
+										},
+										"description": "刪除 vhost 中的 exchange\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "exchanges information, check remove complete",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(404)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/exchanges/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"exchanges",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "demo"
+												}
+											]
+										},
+										"description": "取得 exchange 資訊\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "create new exchange",
+							"item": [
+								{
+									"name": "exchanges new",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.expect(pm.response).to.be.a('object');\r",
+													"    pm.expect(pm.response).haveOwnProperty(\"code\");\r",
+													"    pm.expect(pm.response.code).to.be.within(200, 204);\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"type\":\"direct\",\r\n    \"auto_delete\":false,\r\n    \"durable\":true,\r\n    \"internal\":false,\r\n    \"arguments\":{}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rabbitUrl}}/api/exchanges/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"exchanges",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "{{RMQ_EXCHANGE}}"
+												}
+											]
+										},
+										"description": "新增 exchange 於 vhost 中\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "exchanges information",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [
+											{
+												"key": "",
+												"value": "",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/exchanges/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"exchanges",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "{{RMQ_EXCHANGE}}"
+												}
+											]
+										},
+										"description": "取得 exchange 資訊\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.collectionVariables.set(\"RMQ_EXCHANGE\", \"EX1\");"
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "queue",
+					"item": [
+						{
+							"name": "operations",
+							"item": [
+								{
+									"name": "queues all list",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/queues",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"queues"
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "queues list with vhost",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/queues/:vhost",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"queues",
+												":vhost"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "queues new",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(201)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"auto_delete\":false,\r\n    \"durable\":true,\r\n    \"arguments\":{},\r\n    \"node\":\"{{RMQ_NODE}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rabbitUrl}}/api/queues/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"queues",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "demoq"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "queues information",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/queues/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"queues",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "demoq"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "queues remove",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(204)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/queues/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"queues",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "demoq"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "queues information, check remove complete",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(404)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/queues/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"queues",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "demoq"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "create new queue",
+							"item": [
+								{
+									"name": "queues new",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.expect(pm.response).to.be.a('object');\r",
+													"    pm.expect(pm.response).haveOwnProperty(\"code\");\r",
+													"    pm.expect(pm.response.code).to.be.within(200, 204);\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [
+											{
+												"key": "content-type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"auto_delete\":false,\r\n    \"durable\":true,\r\n    \"arguments\":{},\r\n    \"node\":\"{{RMQ_NODE}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rabbitUrl}}/api/queues/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"queues",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "{{RMQ_QUEUE}}"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "queues information",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/queues/:vhost/:name",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"queues",
+												":vhost",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "name",
+													"value": "{{RMQ_QUEUE}}"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								}
+							],
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.collectionVariables.set(\"RMQ_QUEUE\", \"Q1\");"
+										]
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											""
+										]
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "binding",
+					"item": [
+						{
+							"name": "operations",
+							"item": [
+								{
+									"name": "bindings all list",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/bindings",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"bindings"
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "bindings list with vhost",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/bindings/:vhost",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"bindings",
+												":vhost"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "bindings new",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(201)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"routing_key\":\"my_routing_key\", \r\n    \"arguments\":{\"x-arg\": \"value\"}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rabbitUrl}}/api/bindings/:vhost/e/:exchange/q/:queue",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"bindings",
+												":vhost",
+												"e",
+												":exchange",
+												"q",
+												":queue"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "exchange",
+													"value": "{{RMQ_EXCHANGE}}"
+												},
+												{
+													"key": "queue",
+													"value": "{{RMQ_QUEUE}}"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "bindings information",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200)\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson).to.be.a('array');\r",
+													"    const bind = responseJson[0];\r",
+													"    pm.expect(bind).haveOwnProperty(\"properties_key\");\r",
+													"    pm.collectionVariables.set(\"RMQ_BINDING_PROP_KEY\", bind.properties_key);\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/bindings/:vhost/e/:exchange/q/:queue",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"bindings",
+												":vhost",
+												"e",
+												":exchange",
+												"q",
+												":queue"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "exchange",
+													"value": "{{RMQ_EXCHANGE}}"
+												},
+												{
+													"key": "queue",
+													"value": "{{RMQ_QUEUE}}"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "bindings remove",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(204)\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"routing_key\":\"my_routing_key\", \r\n    \"arguments\":{\"x-arg\": \"value\"}\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{rabbitUrl}}/api/bindings/:vhost/e/:exchange/q/:queue/:props",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"bindings",
+												":vhost",
+												"e",
+												":exchange",
+												"q",
+												":queue",
+												":props"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "exchange",
+													"value": "{{RMQ_EXCHANGE}}"
+												},
+												{
+													"key": "queue",
+													"value": "{{RMQ_QUEUE}}"
+												},
+												{
+													"key": "props",
+													"value": "{{RMQ_BINDING_PROP_KEY}}"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								},
+								{
+									"name": "bindings information, check remove complete",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.test(\"APi execute is success\", () => {\r",
+													"    pm.response.to.have.status(200);\r",
+													"    const responseJson = pm.response.json();\r",
+													"    pm.expect(responseJson).to.be.a('array');\r",
+													"    pm.expect(responseJson.length).to.be.eq(0);\r",
+													"})"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "{{default_password}}",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "{{default_user}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{rabbitUrl}}/api/bindings/:vhost/e/:exchange/q/:queue",
+											"host": [
+												"{{rabbitUrl}}"
+											],
+											"path": [
+												"api",
+												"bindings",
+												":vhost",
+												"e",
+												":exchange",
+												"q",
+												":queue"
+											],
+											"variable": [
+												{
+													"key": "vhost",
+													"value": "{{RMQ_VHOST}}"
+												},
+												{
+													"key": "exchange",
+													"value": "{{RMQ_EXCHANGE}}"
+												},
+												{
+													"key": "queue",
+													"value": "{{RMQ_QUEUE}}"
+												}
+											]
+										},
+										"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Message publish and subscribe",
+			"item": [
+				{
+					"name": "Direct",
+					"item": [
+						{
+							"name": "01. Get node name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.response.to.have.status(200)\r",
+											"})\r",
+											"pm.test(\"Node structure\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.a('array');\r",
+											"    const node = responseJson[0];\r",
+											"    pm.expect(node).to.be.a('object');\r",
+											"    pm.expect(node).haveOwnProperty(\"name\");\r",
+											"    pm.collectionVariables.set(\"RMQ_NODE\", node.name);\r",
+											"})\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{rabbitUrl}}/api/nodes",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"nodes"
+									]
+								},
+								"description": "取得 RabbitMQ cluster 中所有 node 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "02. Create vhost",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.expect(pm.response).to.be.a('object');\r",
+											"    pm.expect(pm.response).haveOwnProperty(\"code\");\r",
+											"    pm.expect(pm.response.code).to.be.within(200, 204);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "content-type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{rabbitUrl}}/api/vhosts/:name",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"vhosts",
+										":name"
+									],
+									"variable": [
+										{
+											"key": "name",
+											"value": "{{RMQ_VHOST}}"
+										}
+									]
+								},
+								"description": "新增一個 vhost，正常回應 201、重覆回應 204\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "03. Create exchange",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.expect(pm.response).to.be.a('object');\r",
+											"    pm.expect(pm.response).haveOwnProperty(\"code\");\r",
+											"    pm.expect(pm.response.code).to.be.within(200, 204);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "content-type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"type\":\"direct\",\r\n    \"auto_delete\":false,\r\n    \"durable\":true,\r\n    \"internal\":false,\r\n    \"arguments\":{}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{rabbitUrl}}/api/exchanges/:vhost/:name",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"exchanges",
+										":vhost",
+										":name"
+									],
+									"variable": [
+										{
+											"key": "vhost",
+											"value": "{{RMQ_VHOST}}"
+										},
+										{
+											"key": "name",
+											"value": "{{RMQ_EXCHANGE}}"
+										}
+									]
+								},
+								"description": "新增 exchange 於 vhost 中\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "04. Create queue",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.expect(pm.response).to.be.a('object');\r",
+											"    pm.expect(pm.response).haveOwnProperty(\"code\");\r",
+											"    pm.expect(pm.response.code).to.be.within(200, 204);\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "content-type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"auto_delete\":false,\r\n    \"durable\":true,\r\n    \"arguments\":{},\r\n    \"node\":\"{{RMQ_NODE}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{rabbitUrl}}/api/queues/:vhost/:name",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"queues",
+										":vhost",
+										":name"
+									],
+									"variable": [
+										{
+											"key": "vhost",
+											"value": "{{RMQ_VHOST}}"
+										},
+										{
+											"key": "name",
+											"value": "{{RMQ_QUEUE}}"
+										}
+									]
+								},
+								"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "05. binding exchange and queue",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.response.to.have.status(201)\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"routing_key\":\"my.routing.key\", \r\n    \"arguments\":{\"x-arg\": \"value\"}\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{rabbitUrl}}/api/bindings/:vhost/e/:exchange/q/:queue",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"bindings",
+										":vhost",
+										"e",
+										":exchange",
+										"q",
+										":queue"
+									],
+									"variable": [
+										{
+											"key": "vhost",
+											"value": "{{RMQ_VHOST}}"
+										},
+										{
+											"key": "exchange",
+											"value": "{{RMQ_EXCHANGE}}"
+										},
+										{
+											"key": "queue",
+											"value": "{{RMQ_QUEUE}}"
+										}
+									]
+								},
+								"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "06. Published message",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.expect(pm.response).to.be.a('object');\r",
+											"    pm.expect(pm.response).haveOwnProperty(\"code\");\r",
+											"    pm.expect(pm.response.code).to.be.within(200, 204);\r",
+											"})\r",
+											"pm.test(\"Response structure and value\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.a('object');\r",
+											"    pm.expect(responseJson).haveOwnProperty(\"routed\");\r",
+											"    pm.expect(responseJson.routed).to.be.true;\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "content-type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"properties\":{},\r\n    \"routing_key\":\"my.routing.key\",\r\n    \"payload\":\"my body\",\r\n    \"payload_encoding\":\"string\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{rabbitUrl}}/api/exchanges/:vhost/:name/publish",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"exchanges",
+										":vhost",
+										":name",
+										"publish"
+									],
+									"variable": [
+										{
+											"key": "vhost",
+											"value": "{{RMQ_VHOST}}"
+										},
+										{
+											"key": "name",
+											"value": "{{RMQ_EXCHANGE}}"
+										}
+									]
+								},
+								"description": "新增 exchange 於 vhost 中\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						},
+						{
+							"name": "07. Subscribe message",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"APi execute is success\", () => {\r",
+											"    pm.expect(pm.response).to.be.a('object');\r",
+											"    pm.expect(pm.response).haveOwnProperty(\"code\");\r",
+											"    pm.expect(pm.response.code).to.be.within(200, 204);\r",
+											"})\r",
+											"pm.test(\"Response structure and value\", () => {\r",
+											"    const responseJson = pm.response.json();\r",
+											"    pm.expect(responseJson).to.be.a('array');\r",
+											"    pm.expect(responseJson.length).to.be.gt(0);\r",
+											"    const data = responseJson[0];\r",
+											"    pm.expect(data).haveOwnProperty(\"payload\");\r",
+											"    pm.expect(data.payload).to.be.eq(\"my body\");\r",
+											"})"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "{{default_password}}",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "{{default_user}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "content-type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"count\":1,\r\n    \"ackmode\":\"ack_requeue_true\",\r\n    \"encoding\":\"auto\",\r\n    \"truncate\":50000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{rabbitUrl}}/api/queues/:vhost/:name/get",
+									"host": [
+										"{{rabbitUrl}}"
+									],
+									"path": [
+										"api",
+										"queues",
+										":vhost",
+										":name",
+										"get"
+									],
+									"variable": [
+										{
+											"key": "vhost",
+											"value": "{{RMQ_VHOST}}"
+										},
+										{
+											"key": "name",
+											"value": "{{RMQ_QUEUE}}"
+										}
+									]
+								},
+								"description": "取得 queue 列表\n\n[RabbitMQ APO](https://rawcdn.githack.com/rabbitmq/rabbitmq-server/v3.10.7/deps/rabbitmq_management/priv/www/api/index.html)"
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"RMQ_VHOST\", \"VH.listener\");",
+									"pm.collectionVariables.set(\"RMQ_EXCHANGE\", \"EX.listener\");",
+									"pm.collectionVariables.set(\"RMQ_QUEUE\", \"QU.listener\");",
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.collectionVariables.set(\"RMQ_VHOST\", \"VH.listener\");",
+							"pm.collectionVariables.set(\"RMQ_EXCHANGE\", \"EX.listener\");",
+							"pm.collectionVariables.set(\"RMQ_QUEUE\", \"QU.listener\");",
+							"pm.collectionVariables.set(\"RMQ_ROUTING_KEY \", \"my.routing.key\");",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "RMQ_NODE",
+			"value": ""
+		},
+		{
+			"key": "RMQ_VHOST",
+			"value": ""
+		},
+		{
+			"key": "RMQ_EXCHANGE",
+			"value": ""
+		},
+		{
+			"key": "RMQ_QUEUE",
+			"value": ""
+		},
+		{
+			"key": "RMQ_BINDING_PROP_KEY",
+			"value": ""
+		}
+	]
+}

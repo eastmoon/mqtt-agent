@@ -1,0 +1,42 @@
+# Docker-Compose document
+# Ref : https://docs.docker.com/compose/compose-file/
+# RabbitMQ use 3.0 and management plugin
+## Management Plugin, ref: https://www.rabbitmq.com/management.html
+
+version: "3.0"
+services:
+
+  tester:
+    image: tester-service
+    container_name: mqtt-agent-tester-service
+    volumes:
+      - ${SOURCE_CODE_VOLUME}\postman:/app
+      - ${CACHE_VOLUME}:/cache
+
+  nginx:
+    image: rabbitmq-agent
+    container_name: mqtt-agent-nginx-service
+    volumes:
+      - ${SOURCE_CODE_VOLUME}\cgi:/usr/share/nginx/html/cgi-bin
+      - ${SOURCE_CODE_VOLUME}\html:/usr/share/nginx/html
+    ports:
+      - 8080:80
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: mqtt-agent-rabbitmq-service
+    hostname: my-rabbit
+    volumes:
+      - .\rabbitmq\enabled_plugins:/etc/rabbitmq/enabled_plugins
+    ports:
+      - 1883:1883
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: rootpwd
+
+networks:
+  default:
+    driver: bridge
+    name: mqtt-test-network

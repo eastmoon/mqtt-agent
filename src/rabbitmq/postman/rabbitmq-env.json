@@ -1,0 +1,39 @@
+{
+	"id": "df77a278-126e-4ae5-b0f2-c394b4aa8284",
+	"name": "rabbitmq-env",
+	"values": [
+		{
+			"key": "mqUrl",
+			"value": "rabbitmq",
+			"enabled": true
+		},
+		{
+			"key": "mqPort",
+			"value": "1883",
+			"enabled": true
+		},
+		{
+			"key": "hostUrl",
+			"value": "http://nginx",
+			"enabled": true
+		},
+		{
+			"key": "rabbitUrl",
+			"value": "http://rabbitmq:15672",
+			"enabled": true
+		},
+		{
+			"key": "default_user",
+			"value": "root",
+			"enabled": true
+		},
+		{
+			"key": "default_password",
+			"value": "rootpwd",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2022-09-07T06:11:32.573Z",
+	"_postman_exported_using": "Postman/8.10.0"
+}
