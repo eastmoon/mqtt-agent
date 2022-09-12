@@ -54,7 +54,6 @@ sub parser_request_information {
 
 sub response_unknown_command {
     print "Content-type: application/json";
-    print "Access-control-allow-origin: *";
     print "\n\n";
     %obj=("status"=>"Error: Unknown API command", "message"=>"$REQUEST_METHOD $REQUEST_URI did not match a known command");
     $json_text_obj = encode_json \%obj;
@@ -78,7 +77,6 @@ sub response_json {
         "request"=>\%req
     );
     print "Content-type: application/json";
-    print "Access-control-allow-origin: *";
     print "\n\n";
     $json_text_obj = encode_json \%obj;
     print "$json_text_obj\n";
