@@ -1,0 +1,198 @@
+#!/usr/bin/env perl
+
+# Import library
+use JSON;
+use Switch;
+
+# Declare variable
+$REQUEST_METHOD ="";
+$REQUEST_URI ="";
+$CONTENT_TYPE = "";
+$CONTENT_LENGTH = "";
+$CONTENT = "";
+$MQTT_SERVER = "localhost";
+$MQTT_PORT = "1883";
+$MQTT_TOPIC = "/home/demo";
+$MQTT_USER = "";
+$MQTT_USER_PASSWORD = "";
+$MQTT_TOPIC_MSG_COUNT = "1";
+$MQTT_TOPIC_WAIT_TIME = "20";
+$MQTT_GET_USE_SUB_CMD = "1";
+
+# Declare function
+sub parser_request_info {
+    $CONTNET = "";
+    $CONTENT_TYPE = $ENV{'CONTENT_TYPE'};
+    $CONTENT_LENGTH = $ENV{'CONTENT_LENGTH'};
+    if ( ! $CONTENT_LENGTH eq "" ) {
+        read (STDIN, $CONTENT, $ENV{'CONTENT_LENGTH'});
+    }
+    %req=(
+        "REQUEST_METHOD"=>$ENV{'REQUEST_METHOD'},
+        "REQUEST_URI"=>$ENV{'REQUEST_URI'},
+        "SCRIPT_FILENAME"=>$ENV{'SCRIPT_FILENAME'},
+        "SCRIPT_NAME"=>$ENV{'SCRIPT_NAME'},
+        "QUERY_STRING"=>$ENV{'QUERY_STRING'},
+        "CONTENT_TYPE"=>$CONTENT_TYPE,
+        "CONTENT_LENGTH"=>$CONTENT_LENGTH,
+        "CONTENT"=>$CONTENT
+    );
+    return \%req;
+}
+
+sub parser_query_string {
+    $query = $ENV{'QUERY_STRING'};
+    @list = split( /\&/, $query);
+    foreach (@list) {
+      ($var, $val) = split(/=/);
+      if ( $var eq "h" ) {
+          $MQTT_SERVER = $val
+      } elsif ( $var eq "p" ) {
+          $MQTT_PORT = $val
+      } elsif ( $var eq "t") {
+          $MQTT_TOPIC = $val
+      } elsif ( $var eq "U") {
+          $MQTT_USER = $val
+      } elsif ( $var eq "P") {
+          $MQTT_USER_PASSWORD = $val
+      } elsif ( $var eq "c") {
+          $MQTT_TOPIC_MSG_COUNT = $val
+      } elsif ( $var eq "w") {
+          $MQTT_TOPIC_WAIT_TIME = $val
+      } elsif ( $var eq "subcmd") {
+          $MQTT_GET_USE_SUB_CMD = $val
+      }
+    }
+    %qs=(
+        "MQTT_SERVER"=>$MQTT_SERVER,
+        "MQTT_PORT"=>$MQTT_PORT,
+        "MQTT_TOPIC"=>$MQTT_TOPIC,
+        "MQTT_USER"=>$MQTT_USER,
+        "MQTT_USER_PASSWORD"=>$MQTT_USER_PASSWORD,
+        "MQTT_TOPIC_MSG_COUNT"=>$MQTT_TOPIC_MSG_COUNT,
+        "MQTT_TOPIC_WAIT_TIME"=>$MQTT_TOPIC_WAIT_TIME,
+        "MQTT_GET_USE_SUB_CMD"=>$MQTT_GET_USE_SUB_CMD
+    );
+    return \%qs;
+}
+
+sub parser_restful_info{
+    # Regex for get the related fields from URL
+    my($url) = @_;
+    $url =~ m/(\w+)\/(.*)/;
+    %re = (
+        "api"=>$1,
+        "topic"=>$2
+    );
+    return \%re;
+}
+
+sub response {
+    my($status, $message) = @_;
+    %obj=(
+        "status"=>$status,
+        "message"=>$message
+    );
+    $json_text_obj = encode_json \%obj;
+    print "Content-type: application/json";
+    print "\n\n";
+    print "$json_text_obj\n";
+}
+
+sub replace {
+    my ($from,$to,$string) = @_;
+    $string =~s/$from/$to/ig;
+    return $string;
+}
+
+sub exec_handle {
+    my ($code, $result) = @_;
+    if ($code == -1) {
+        $msg = sprintf "failed to execute: $!";
+        &response("error", $msg);
+    }
+    elsif ($code & 127) {
+        $msg = sprintf "child died with signal %d, %s coredump\n", ($? & 127),  ($? & 128) ? 'with' : 'without';
+        &response("error", $msg);
+    }
+    else {
+        $stdval = $code >> 8;
+        if ($stdval == 1) {
+            &response("error", "Error: Connection refused");
+        } elsif ($stdval == 27) {
+            &response("error", "Error: Connection timed out");
+        } elsif ($stdval == 127) {
+            &response("error", "Error: Command not found");
+        } else {
+            chomp $result;
+            &response("success", $result);
+        }
+    }
+}
+
+sub call_get {
+    my($info) = @_;
+    #system("mosquitto_sub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC);
+    if ( $MQTT_GET_USE_SUB_CMD eq "1" ) {
+        $result = `mosquitto_sub -h $info{'qs'}{'MQTT_SERVER'} -p $info{'qs'}{'MQTT_PORT'} -t \"$info{'restful'}{'topic'}\" -v -C $info{'qs'}{'MQTT_TOPIC_MSG_COUNT'} -W $info{'qs'}{'MQTT_TOPIC_WAIT_TIME'} -u $info{'qs'}{'MQTT_USER'} -P $info{'qs'}{'MQTT_USER_PASSWORD'}`;
+        &exec_handle($?, $result);
+    } else {
+        $lfilename = sprintf "/root/mosquitto-%s.log", replace("/","-","$info{'restful'}{'topic'}");
+        $child_pid = open(FH, '<', $lfilename) or &response("error", $!);
+        if ($child_pid) {
+            $result = <FH>;
+            close(FH);
+            if ( $result eq "" ) {
+                $msg = sprintf "Error: %s is empty.", $lfilename;
+                &response("error", $msg);
+            } else {
+                unlink $lfilename;
+                &response("success", $result);
+            }
+        }
+    }
+}
+
+sub call_post {
+    my($info) = @_;
+    #system("mosquitto_pub", "-h", $MQTT_SERVER, "-p", $MQTT_PORT, "-t", $MQTT_TOPIC, "-m", $CONTENT);
+    $result = `mosquitto_pub -h $info{'qs'}{'MQTT_SERVER'} -p $info{'qs'}{'MQTT_PORT'} -t \"$info{'restful'}{'topic'}\" -m \"$info{'req'}{'CONTENT'}\" -u $info{'qs'}{'MQTT_USER'} -P $info{'qs'}{'MQTT_USER_PASSWORD'}`;
+    &exec_handle($?, "Send infomation $info{'req'}{'CONTENT'} to $info{'qs'}{'MQTT_SERVER'} port $info{'qs'}{'MQTT_PORT'} topic $info{'restful'}{'topic'}");
+}
+
+sub call_put {
+    my($info) = @_;
+    $cfilename = sprintf "/root/mosquitto-sub-request-%s.cmd", replace("/","-","$info{'restful'}{'topic'}");
+    $lfilename = sprintf "/root/mosquitto-%s.log", replace("/","-","$info{'restful'}{'topic'}");
+    $msg = sprintf "register topic %s listener with %d msg count and %d(s), log in %s", $info{'restful'}{'topic'}, $info{'qs'}{'MQTT_TOPIC_MSG_COUNT'}, $info{'qs'}{'MQTT_TOPIC_WAIT_TIME'}, $lfilename;
+    open(FH, '>', $cfilename) or die $!;
+    print FH "eval mosquitto_sub -h $info{'qs'}{'MQTT_SERVER'} -p $info{'qs'}{'MQTT_PORT'} -t \"$info{'restful'}{'topic'}\" -v -C $info{'qs'}{'MQTT_TOPIC_MSG_COUNT'} -W $info{'qs'}{'MQTT_TOPIC_WAIT_TIME'} -u $info{'qs'}{'MQTT_USER'} -P $info{'qs'}{'MQTT_USER_PASSWORD'} > $lfilename &";
+    close(FH);
+    exec_handle($?, $msg);
+}
+
+sub call_del {
+    my($info) = @_;
+    return "Call DELETE method, and remove information."
+}
+
+# Execute script
+$req = &parser_request_info();
+$restful = &parser_restful_info($req{"SCRIPT_NAME"});
+$qs = &parser_query_string();
+%info = (
+    "restful"=>$restful,
+    "req"=>$req,
+    "qs"=>$qs
+);
+$stat="success";
+switch($req{"REQUEST_METHOD"}) {
+    case "GET"    { &call_get(\%info); }
+    case "POST"    { &call_post(\%info); }
+    case "PUT"    { &call_put(\%info); }
+    else {
+        $stat = "error";
+        $result = "$req{'REQUEST_METHOD'} $req{'REQUEST_URI'} did not match a known command";
+        &response($stat, $result);
+    }
+}

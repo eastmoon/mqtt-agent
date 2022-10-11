@@ -24,7 +24,7 @@
 							"pm.test(\"Response is success\", () => {\r",
 							"    const responseJson = pm.response.json();\r",
 							"    pm.expect(responseJson).to.be.a(\"object\");\r",
-							"    pm.expect(responseJson.status).to.eql(\"Error: Unknown API command\");\r",
+							"    pm.expect(responseJson.status).to.eql(\"error\");\r",
 							"    pm.expect(responseJson.message).include(\"DELETE\");\r",
 							"})"
 						],
@@ -45,13 +45,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice",
+					"raw": "{{hostUrl}}/mqtt/test/testdevice?h={{mqUrl}}&p={{mqPort}}",
 					"host": [
 						"{{hostUrl}}"
 					],
 					"path": [
-						"cgi-bin",
-						"rpc"
+						"mqtt",
+						"test",
+						"testdevice"
 					],
 					"query": [
 						{
@@ -63,11 +64,6 @@
 							"key": "p",
 							"value": "{{mqPort}}",
 							"description": "目標 Mosquitto 伺服器連接埠"
-						},
-						{
-							"key": "t",
-							"value": "test/testdevice",
-							"description": "對話路由"
 						}
 					]
 				}
@@ -99,13 +95,14 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice",
+					"raw": "{{hostUrl}}/mqtt/test/testdevice?h={{mqUrl}}&p={{mqPort}}",
 					"host": [
 						"{{hostUrl}}"
 					],
 					"path": [
-						"cgi-bin",
-						"rpc"
+						"mqtt",
+						"test",
+						"testdevice"
 					],
 					"query": [
 						{
@@ -117,11 +114,6 @@
 							"key": "p",
 							"value": "{{mqPort}}",
 							"description": "目標 Mosquitto 伺服器連接埠"
-						},
-						{
-							"key": "t",
-							"value": "test/testdevice",
-							"description": "對話路由"
 						},
 						{
 							"key": "w",
@@ -149,9 +141,6 @@
 							"    pm.expect(responseJson).to.be.a(\"object\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
-							"    pm.expect(responseJson).haveOwnProperty(\"request\");\r",
-							"    pm.expect(responseJson.request).haveOwnProperty(\"METHOD\");\r",
-							"    pm.expect(responseJson.request.METHOD).to.eql(\"POST\");\r",
 							"})\r",
 							"pm.test(\"Response is success\", () => {\r",
 							"    const responseJson = pm.response.json();\r",
@@ -159,7 +148,7 @@
 							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
 							"    pm.expect(responseJson.status).to.eql(\"success\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
-							"    pm.expect(responseJson.message).to.eql(\"\");\r",
+							"    pm.expect(responseJson.message).include(\"test/testdevice\");\r",
 							"})"
 						],
 						"type": "text/javascript"
@@ -179,13 +168,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice",
+					"raw": "{{hostUrl}}/mqtt/test/testdevice?h={{mqUrl}}&p={{mqPort}}",
 					"host": [
 						"{{hostUrl}}"
 					],
 					"path": [
-						"cgi-bin",
-						"rpc"
+						"mqtt",
+						"test",
+						"testdevice"
 					],
 					"query": [
 						{
@@ -197,11 +187,6 @@
 							"key": "p",
 							"value": "{{mqPort}}",
 							"description": "目標 Mosquitto 伺服器連接埠"
-						},
-						{
-							"key": "t",
-							"value": "test/testdevice",
-							"description": "對話路由"
 						}
 					]
 				}
@@ -223,9 +208,6 @@
 							"    pm.expect(responseJson).to.be.a(\"object\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
-							"    pm.expect(responseJson).haveOwnProperty(\"request\");\r",
-							"    pm.expect(responseJson.request).haveOwnProperty(\"METHOD\");\r",
-							"    pm.expect(responseJson.request.METHOD).to.eql(\"GET\");\r",
 							"})\r",
 							"pm.test(\"Response is success\", () => {\r",
 							"    const responseJson = pm.response.json();\r",
@@ -233,7 +215,7 @@
 							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
 							"    pm.expect(responseJson.status).to.eql(\"success\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
-							"    pm.expect(responseJson.message).to.not.eql(\"\");\r",
+							"    pm.expect(responseJson.message).include(\"test/testdevice\");\r",
 							"})"
 						],
 						"type": "text/javascript"
@@ -244,13 +226,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice&subcmd=0",
+					"raw": "{{hostUrl}}/mqtt/test/testdevice?h={{mqUrl}}&p={{mqPort}}&subcmd=0",
 					"host": [
 						"{{hostUrl}}"
 					],
 					"path": [
-						"cgi-bin",
-						"rpc"
+						"mqtt",
+						"test",
+						"testdevice"
 					],
 					"query": [
 						{
@@ -262,11 +245,6 @@
 							"key": "p",
 							"value": "{{mqPort}}",
 							"description": "目標 Mosquitto 伺服器連接埠"
-						},
-						{
-							"key": "t",
-							"value": "test/testdevice",
-							"description": "對話路由"
 						},
 						{
 							"key": "subcmd",

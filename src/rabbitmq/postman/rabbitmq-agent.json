@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "35970416-5692-44c8-8be7-0d6e7c8cc7c4",
-		"name": "mosquitto-agent",
+		"name": "rabbitmq-agent",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -24,7 +24,7 @@
 							"pm.test(\"Response is success\", () => {\r",
 							"    const responseJson = pm.response.json();\r",
 							"    pm.expect(responseJson).to.be.a(\"object\");\r",
-							"    pm.expect(responseJson.status).to.eql(\"Error: Unknown API command\");\r",
+							"    pm.expect(responseJson.status).to.eql(\"error\");\r",
 							"    pm.expect(responseJson.message).include(\"DELETE\");\r",
 							"})"
 						],
@@ -45,13 +45,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&t=test/testdevice&U={{default_user}}&P={{default_password}}",
+					"raw": "{{hostUrl}}/mqtt/test/testdevice?h={{mqUrl}}&p={{mqPort}}&U={{default_user}}&P={{default_password}}",
 					"host": [
 						"{{hostUrl}}"
 					],
 					"path": [
-						"cgi-bin",
-						"rpc"
+						"mqtt",
+						"test",
+						"testdevice"
 					],
 					"query": [
 						{
@@ -63,11 +64,6 @@
 							"key": "p",
 							"value": "{{mqPort}}",
 							"description": "目標 MQTT 伺服器連接埠"
-						},
-						{
-							"key": "t",
-							"value": "test/testdevice",
-							"description": "對話路由"
 						},
 						{
 							"key": "U",
@@ -109,13 +105,14 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&U={{default_user}}&P={{default_password}}&t=test/testdevice",
+					"raw": "{{hostUrl}}/mqtt/test/testdevice?h={{mqUrl}}&p={{mqPort}}&U={{default_user}}&P={{default_password}}",
 					"host": [
 						"{{hostUrl}}"
 					],
 					"path": [
-						"cgi-bin",
-						"rpc"
+						"mqtt",
+						"test",
+						"testdevice"
 					],
 					"query": [
 						{
@@ -137,11 +134,6 @@
 							"key": "P",
 							"value": "{{default_password}}",
 							"description": "目標 MQTT 伺服器帳戶密碼"
-						},
-						{
-							"key": "t",
-							"value": "test/testdevice",
-							"description": "對話路由"
 						},
 						{
 							"key": "w",
@@ -169,9 +161,6 @@
 							"    pm.expect(responseJson).to.be.a(\"object\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
-							"    pm.expect(responseJson).haveOwnProperty(\"request\");\r",
-							"    pm.expect(responseJson.request).haveOwnProperty(\"METHOD\");\r",
-							"    pm.expect(responseJson.request.METHOD).to.eql(\"POST\");\r",
 							"})\r",
 							"pm.test(\"Response is success\", () => {\r",
 							"    const responseJson = pm.response.json();\r",
@@ -179,7 +168,7 @@
 							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
 							"    pm.expect(responseJson.status).to.eql(\"success\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
-							"    pm.expect(responseJson.message).to.eql(\"\");\r",
+							"    pm.expect(responseJson.message).include(\"test/testdevice\");\r",
 							"})"
 						],
 						"type": "text/javascript"
@@ -199,13 +188,14 @@
 					}
 				},
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&U={{default_user}}&P={{default_password}}&t=test/testdevice",
+					"raw": "{{hostUrl}}/mqtt/test/testdevice?h={{mqUrl}}&p={{mqPort}}&U={{default_user}}&P={{default_password}}",
 					"host": [
 						"{{hostUrl}}"
 					],
 					"path": [
-						"cgi-bin",
-						"rpc"
+						"mqtt",
+						"test",
+						"testdevice"
 					],
 					"query": [
 						{
@@ -227,11 +217,6 @@
 							"key": "P",
 							"value": "{{default_password}}",
 							"description": "目標 MQTT 伺服器帳戶密碼"
-						},
-						{
-							"key": "t",
-							"value": "test/testdevice",
-							"description": "對話路由"
 						}
 					]
 				}
@@ -253,9 +238,6 @@
 							"    pm.expect(responseJson).to.be.a(\"object\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
-							"    pm.expect(responseJson).haveOwnProperty(\"request\");\r",
-							"    pm.expect(responseJson.request).haveOwnProperty(\"METHOD\");\r",
-							"    pm.expect(responseJson.request.METHOD).to.eql(\"GET\");\r",
 							"})\r",
 							"pm.test(\"Response is success\", () => {\r",
 							"    const responseJson = pm.response.json();\r",
@@ -263,7 +245,7 @@
 							"    pm.expect(responseJson).haveOwnProperty(\"status\");\r",
 							"    pm.expect(responseJson.status).to.eql(\"success\");\r",
 							"    pm.expect(responseJson).haveOwnProperty(\"message\");\r",
-							"    pm.expect(responseJson.message).to.not.eql(\"\");\r",
+							"    pm.expect(responseJson.message).include(\"test/testdevice\");\r",
 							"})"
 						],
 						"type": "text/javascript"
@@ -274,13 +256,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{hostUrl}}/cgi-bin/rpc?h={{mqUrl}}&p={{mqPort}}&U={{default_user}}&P={{default_password}}&t=test/testdevice&subcmd=0",
+					"raw": "{{hostUrl}}/mqtt/test/testdevice?h={{mqUrl}}&p={{mqPort}}&U={{default_user}}&P={{default_password}}&subcmd=0",
 					"host": [
 						"{{hostUrl}}"
 					],
 					"path": [
-						"cgi-bin",
-						"rpc"
+						"mqtt",
+						"test",
+						"testdevice"
 					],
 					"query": [
 						{
@@ -302,11 +285,6 @@
 							"key": "P",
 							"value": "{{default_password}}",
 							"description": "目標 MQTT 伺服器帳戶密碼"
-						},
-						{
-							"key": "t",
-							"value": "test/testdevice",
-							"description": "對話路由"
 						},
 						{
 							"key": "subcmd",
