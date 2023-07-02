@@ -86,3 +86,6 @@ rabbitmq.bat test
         + [Message Queue 簡介(以 RabbitMQ 為例)](https://godleon.github.io/blog/ChatOps/message-queue-concepts/)
         + [RabbitMQ 筆記](https://hackmd.io/@flyxiang/HJ5u7CAtB)
         + [RabbitMQ (二) 概念](https://dotblogs.com.tw/daniel/2019/01/26/114949)
++ Benchmarks
+    - [Open MQTT Benchmarking Comparison: Mosquitto vs NanoMQ](https://www.emqx.com/en/blog/open-mqtt-benchmarking-comparison-mosquitto-vs-nanomq)
+    - [Benchmarking Apache Kafka, Apache Pulsar, and RabbitMQ: Which is the Fastest?](https://www.confluent.io/blog/kafka-fastest-messaging-system/)
